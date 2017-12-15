@@ -21,8 +21,8 @@ class Trepbot final {
   void ProcessUpdates();
 
  private:
-  typedef void (Trepbot::*Handler)(nlohmann::json&);
-  typedef std::map<std::string, Handler> handlersType;
+  using Handler = void (Trepbot::*)(nlohmann::json&);
+  using handlersType = std::map<std::string, Handler>;
   static handlersType handlers;
 
   Httper& http;

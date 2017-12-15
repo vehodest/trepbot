@@ -1,19 +1,22 @@
 #include "CurlEngine.h"
-#include <sstream>
 #include <iostream>
+#include <sstream>
 
 CurlEngine::CurlGlobalInit CurlEngine::curlGlobalInit;
 
 CurlEngine::CurlGlobalInit::CurlGlobalInit() {
-  curl_global_init(CURL_GLOBAL_DEFAULT);
+  ::curl_global_init(CURL_GLOBAL_DEFAULT);
 }
 
 CurlEngine::CurlGlobalInit::~CurlGlobalInit() {
-  curl_global_cleanup();
+  ::curl_global_cleanup();
 }
 
 CurlEngine::CurlEngine(StopFlag& stopFlag)
-    : stopFlag(stopFlag), handle(::curl_easy_init(), ::curl_easy_cleanup), isVerbose(false), timeoutMsec(30000) {
+    : stopFlag(stopFlag),
+      handle(::curl_easy_init(), ::curl_easy_cleanup),
+      isVerbose(false),
+      timeoutMsec(30000) {
   if (!handle) {
     throw std::runtime_error("Error when curl_easy_init");
   }
@@ -46,14 +49,14 @@ int CurlEngine::ProgressCallback(void* clientp,
                                  curl_off_t dlnow,
                                  curl_off_t ultotal,
                                  curl_off_t ulnow) {
-  StopFlag &stopFlag = *static_cast<StopFlag*>(clientp);
+  StopFlag& stopFlag = *static_cast<StopFlag*>(clientp);
   return stopFlag.IsStop() ? 1 : 0;
 }
 
 void CurlEngine::Perform(std::string const& info) {
   CURLcode result = ::curl_easy_perform(handle.get());
   long httpCode(0);
-  curl_easy_getinfo (handle.get(), CURLINFO_RESPONSE_CODE, &httpCode);
+  ::curl_easy_getinfo(handle.get(), CURLINFO_RESPONSE_CODE, &httpCode);
 
   if (CURLE_OK == result) {
     return;
@@ -71,7 +74,8 @@ void CurlEngine::PrepareRequest(std::string const& url, ContainerType& data) {
 
   ::curl_easy_setopt(handle.get(), CURLOPT_VERBOSE, isVerbose);
 
-  ::curl_easy_setopt(handle.get(), CURLOPT_TIMEOUT_MS, static_cast<long>(timeoutMsec));
+  ::curl_easy_setopt(handle.get(), CURLOPT_TIMEOUT_MS,
+                     static_cast<long>(timeoutMsec));
 
   ::curl_easy_setopt(handle.get(), CURLOPT_WRITEFUNCTION, WriteCallback);
   ::curl_easy_setopt(handle.get(), CURLOPT_WRITEDATA, &data);
@@ -118,7 +122,7 @@ CurlEngine::ContainerType CurlEngine::Post(
   }
 
   ::curl_easy_setopt(handle.get(), CURLOPT_HTTPPOST, post_handle.get());
-  
+
   Perform("POST request");
 
   return result;

@@ -4,7 +4,7 @@
 
 class Httper {
  public:
-  typedef std::vector<char> ContainerType;
+  using ContainerType = std::vector<char>;
 
   virtual void SetTimeout(size_t msec) = 0;
   virtual ContainerType Get(std::string const& url) = 0;

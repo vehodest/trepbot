@@ -1,5 +1,6 @@
 #pragma once
 
+#include <atomic>
 #include "StopFlag.h"
 
 class SimpleStopFlag final : public StopFlag {
@@ -8,10 +9,10 @@ class SimpleStopFlag final : public StopFlag {
   SimpleStopFlag(SimpleStopFlag const&) = delete;
   SimpleStopFlag& operator=(SimpleStopFlag const&) = delete;
 
-  bool IsStop() const override { return value; }
+  bool IsStop() const override { return value.load(); }
 
-  void Stop() override { value = true; }
+  void Stop() override { value.store(true); }
 
  private:
-  volatile bool value;
+  std::atomic<bool> value;
 };

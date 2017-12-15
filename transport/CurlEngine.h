@@ -11,7 +11,7 @@
 
 class CurlEngine final : public Httper, public Escaper {
  public:
-  CurlEngine(StopFlag &stopFlag);
+  CurlEngine(StopFlag& stopFlag);
   CurlEngine(CurlEngine const&) = delete;
   CurlEngine& operator=(CurlEngine const&) = delete;
 
@@ -19,12 +19,12 @@ class CurlEngine final : public Httper, public Escaper {
   void SetTimeout(size_t msec) override;
   ContainerType Get(std::string const& url) override;
   ContainerType Post(std::string const& url,
-                             std::string const& partname,
-                             std::string const& filename,
-                             ContainerType const& data) override;
+                     std::string const& partname,
+                     std::string const& filename,
+                     ContainerType const& data) override;
 
  private:
-  StopFlag &stopFlag;
+  StopFlag& stopFlag;
   std::unique_ptr<CURL, void (*)(CURL*)> handle;
   char errorMessage[CURL_ERROR_SIZE];
   bool isVerbose;
