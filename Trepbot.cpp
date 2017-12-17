@@ -14,7 +14,19 @@ Trepbot::Trepbot(std::string const& telegramToken,
       http(http),
       esc(esc),
       tUrl(telegramToken, esc),
-      yaUrl(yandexToken, esc) {}
+      yaUrl(yandexToken, esc) {
+  GetInfo();
+}
+
+void Trepbot::GetInfo() {
+  Httper::ContainerType data = http.Get(tUrl.GetMe());
+
+  data.push_back(char(0));
+  nlohmann::json answer = nlohmann::json::parse(data.data());
+
+  ownId = answer["result"]["id"].get<size_t>();
+  name = answer["result"]["username"].get<std::string>();
+}
 
 void Trepbot::ProcessUpdates() {
   // Получаем данные из Телеграма

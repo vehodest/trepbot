@@ -41,6 +41,12 @@ std::string TelegramUrlBuilder::AnswerInlineQuery(std::string queryId) const {
   return str.str();
 }
 
+std::string TelegramUrlBuilder::GetMe() const {
+   std::stringstream str(PrepareUrl("getMe"));
+
+   return str.str();
+}
+
 std::stringstream TelegramUrlBuilder::PrepareUrl(
     std::string const& methodName) const {
   std::stringstream str;

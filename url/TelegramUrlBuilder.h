@@ -14,6 +14,7 @@ class TelegramUrlBuilder final : public UrlBuilder {
   std::string SendMessage(long int chatId, std::string const& message) const;
   std::string GetUpdates(size_t timeout, size_t offset) const;
   std::string AnswerInlineQuery(std::string queryId) const;
+  std::string GetMe() const;
 
  private:
   static std::string const telegramMainUrl;
