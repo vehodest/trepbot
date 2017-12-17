@@ -33,18 +33,20 @@ std::string TelegramUrlBuilder::GetUpdates(size_t timeout,
   return str.str();
 }
 
-std::string TelegramUrlBuilder::AnswerInlineQuery(std::string queryId) const {
+std::string TelegramUrlBuilder::AnswerInlineQuery(
+    std::string const& queryId,
+    std::string const& answer) const {
   std::stringstream str(PrepareUrl("answerInlineQuery"));
 
-  str << "?inline_query_id=" << queryId << "&results=[]";
+  str << "?inline_query_id=" << queryId << "&results=" << answer;
 
   return str.str();
 }
 
 std::string TelegramUrlBuilder::GetMe() const {
-   std::stringstream str(PrepareUrl("getMe"));
+  std::stringstream str(PrepareUrl("getMe"));
 
-   return str.str();
+  return str.str();
 }
 
 std::stringstream TelegramUrlBuilder::PrepareUrl(

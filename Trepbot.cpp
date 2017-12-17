@@ -14,9 +14,7 @@ Trepbot::Trepbot(std::string const& telegramToken,
       http(http),
       esc(esc),
       tUrl(telegramToken, esc),
-      yaUrl(yandexToken, esc) {
-  GetInfo();
-}
+      yaUrl(yandexToken, esc) {}
 
 void Trepbot::GetInfo() {
   Httper::ContainerType data = http.Get(tUrl.GetMe());
@@ -111,14 +109,44 @@ void Trepbot::MessageHandler(nlohmann::json& msg) {
 }
 
 void Trepbot::QueryHandler(nlohmann::json& query) {
-  std::cout << "pew" << std::endl;
-  std::string id = query["id"].get<std::string>();
-  // nlohmann::json result;
-  // result["results"] = nlohmann::json::array();
+  // Получение идентификатора запроса
+  std::string queryId = query["id"].get<std::string>();
+  size_t senderId = query["from"]["id"].get<size_t>();
+  std::string speach = query["query"];
 
-  Httper::ContainerType data = http.Get(tUrl.AnswerInlineQuery(id));
+  std::cout << speach << std::endl;
+
+  // Преобразование запроса в речь
+  Httper::ContainerType voice = std::move(http.Get(yaUrl.Make(speach)));
+
+  // Отправка запроса себе же на сервера Telegram
+  Httper::ContainerType result =
+      std::move(http.Post(tUrl.SendVoice(senderId), "voice", "voice", voice));
+  result.push_back(char(0));
+
+  nlohmann::json answer = nlohmann::json::parse(result.data());
+  if (answer["ok"].get<bool>() != true) {
+    return;
+  }
+
+  std::string fileId = answer["result"]["voice"]["file_id"];
+
+  // Формирование и выполнение ответа на запрос
+  nlohmann::json cachedVoice;
+  cachedVoice["type"] = "voice";
+  cachedVoice["id"] = 0;
+  cachedVoice["voice_file_id"] = fileId;
+  cachedVoice["title"] = speach;
+
+  nlohmann::json queryAnswer;
+  queryAnswer = nlohmann::json::array();
+  queryAnswer.push_back(cachedVoice);
+
+  Httper::ContainerType data =
+      http.Get(tUrl.AnswerInlineQuery(queryId, queryAnswer.dump()));
   data.push_back(0);
-  std::cout << "Answer for inline ID: " << id << std::endl
+  std::cout << "Answer for inline ID: " << queryId << std::endl
+            << queryAnswer.dump() << std::endl
             << "Result:" << std::endl
             << data.data() << std::endl;
 }
