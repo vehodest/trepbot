@@ -100,8 +100,8 @@ void Trepbot::MessageHandler(nlohmann::json& msg) {
 
   // Все данные есть, можно сгенерировать звук и отправить его
   Httper::ContainerType data = std::move(http.Get(yaUrl.Make(speach)));
-  Httper::ContainerType result =
-      std::move(http.Post(tUrl.SendVoice(chatId), "voice", "voice", data));
+  Httper::ContainerType result = std::move(
+      http.Post(tUrl.SendVoice(chatId, false), "voice", "voice", data));
   // http.Get(tUrl.SendMessage(chatId, speach));
 
   result.push_back(0);
@@ -120,8 +120,9 @@ void Trepbot::QueryHandler(nlohmann::json& query) {
   Httper::ContainerType voice = std::move(http.Get(yaUrl.Make(speach)));
 
   // Отправка запроса себе же на сервера Telegram
-  Httper::ContainerType result =
-      std::move(http.Post(tUrl.SendVoice(senderId), "voice", "voice", voice));
+  std::cout << "Self query: " << tUrl.SendVoice(senderId, true) << std::endl;
+  Httper::ContainerType result = std::move(
+      http.Post(tUrl.SendVoice(senderId, true), "voice", "voice", voice));
   result.push_back(char(0));
 
   nlohmann::json answer = nlohmann::json::parse(result.data());
@@ -130,6 +131,7 @@ void Trepbot::QueryHandler(nlohmann::json& query) {
   }
 
   std::string fileId = answer["result"]["voice"]["file_id"];
+  size_t messageId = answer["result"]["message_id"].get<size_t>();
 
   // Формирование и выполнение ответа на запрос
   nlohmann::json cachedVoice;
@@ -149,4 +151,7 @@ void Trepbot::QueryHandler(nlohmann::json& query) {
             << queryAnswer.dump() << std::endl
             << "Result:" << std::endl
             << data.data() << std::endl;
+
+  // Удаление сообщения
+  http.Get(tUrl.DeleteMessage(senderId, messageId));
 }
