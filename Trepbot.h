@@ -19,6 +19,7 @@ class Trepbot final {
   Trepbot& operator=(Trepbot const&) = delete;
 
   void ProcessUpdates();
+  void GetInfo();
 
  private:
   using Handler = void (Trepbot::*)(nlohmann::json&);
@@ -32,6 +33,9 @@ class Trepbot final {
   YandexUrlBuilder yaUrl;
 
   size_t offset;
+
+  size_t ownId;
+  std::string name;
 
   void MessageHandler(nlohmann::json& msg);
   void QueryHandler(nlohmann::json& query);

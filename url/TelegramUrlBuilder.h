@@ -10,10 +10,13 @@ class TelegramUrlBuilder final : public UrlBuilder {
   TelegramUrlBuilder(TelegramUrlBuilder const&) = delete;
   TelegramUrlBuilder& operator=(TelegramUrlBuilder const&) = delete;
 
-  std::string SendVoice(long int chatId) const;
+  std::string SendVoice(long int chatId, bool sendNotify) const;
   std::string SendMessage(long int chatId, std::string const& message) const;
   std::string GetUpdates(size_t timeout, size_t offset) const;
-  std::string AnswerInlineQuery(std::string queryId) const;
+  std::string AnswerInlineQuery(std::string const& queryId,
+                                std::string const& answer) const;
+  std::string GetMe() const;
+  std::string DeleteMessage(size_t chatId, size_t messageId) const;
 
  private:
   static std::string const telegramMainUrl;

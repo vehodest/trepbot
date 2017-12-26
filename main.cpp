@@ -28,6 +28,8 @@ int main() {
   CurlEngine curlEng(stopFlag);
   Trepbot bot(TELEGRAM_TOKEN, YANDEX_TOKEN, curlEng, curlEng);
 
+  bot.GetInfo();
+
   while (!stopFlag.IsStop()) {
     try {
       bot.ProcessUpdates();
