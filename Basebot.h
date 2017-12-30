@@ -10,9 +10,7 @@
 
 class Basebot {
  public:
-  Basebot(std::string const& telegramToken,
-          Httper& http,
-          Escaper& esc);
+  Basebot(std::string const& telegramToken, Httper& http, Escaper& esc);
 
   Basebot(Basebot const&) = delete;
   Basebot& operator=(Basebot const&) = delete;

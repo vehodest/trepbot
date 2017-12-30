@@ -6,9 +6,7 @@ Trepbot::Trepbot(std::string const& telegramToken,
                  std::string const& yandexToken,
                  Httper& http,
                  Escaper& esc)
-    : Basebot(telegramToken, http, esc),
-      yaUrl(yandexToken, esc)
-{
+    : Basebot(telegramToken, http, esc), yaUrl(yandexToken, esc) {
   handlers["message"] = static_cast<Handler>(&Trepbot::MessageHandler);
   handlers["inline_query"] = static_cast<Handler>(&Trepbot::QueryHandler);
 }
