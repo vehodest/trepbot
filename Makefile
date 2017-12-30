@@ -12,6 +12,7 @@ INCLUDES += -I./
 
 FILES := url/TelegramUrlBuilder.cpp
 FILES += transport/CurlEngine.cpp
+FILES += Basebot.cpp
 FILES += Trepbot.cpp
 FILES += main.cpp
 
