@@ -5,7 +5,7 @@
 
 #include <map>
 
-class Trepbot final: public Basebot {
+class Trepbot final : public Basebot {
  public:
   Trepbot(std::string const& telegramToken,
           std::string const& yandexToken,

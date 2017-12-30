@@ -1,14 +1,9 @@
-#include "Trepbot.h"
+#include "Basebot.h"
 
 #include <iostream>
 
-Basebot::Basebot(std::string const& telegramToken,
-                 Httper& http,
-                 Escaper& esc)
-    : offset(0),
-      http(http),
-      esc(esc),
-      tUrl(telegramToken, esc) {}
+Basebot::Basebot(std::string const& telegramToken, Httper& http, Escaper& esc)
+    : offset(0), http(http), esc(esc), tUrl(telegramToken, esc) {}
 
 void Basebot::GetInfo(size_t ownId, std::string& name) {
   Httper::ContainerType data = http.Get(tUrl.GetMe());
