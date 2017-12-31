@@ -11,6 +11,7 @@ INCLUDES += -I3rd/json/src
 INCLUDES += -I./
 
 FILES := url/TelegramUrlBuilder.cpp
+FILES += url/YandexUrlBuilder.cpp
 FILES += transport/CurlEngine.cpp
 FILES += Basebot.cpp
 FILES += Trepbot.cpp
