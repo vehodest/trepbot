@@ -1,39 +1,42 @@
 #pragma once
 
+#include <map>
 #include <sstream>
 #include <string>
 #include "UrlBuilder.h"
 
 // https://tech.yandex.ru/speechkit/cloud/doc/guide/concepts/tts-http-request-docpage/
 
-/* https://tts.voicetech.yandex.net/generate?
-   key=<API‑ключ>
-   & text=<текст>
-   & format=<mp3|wav|opus>
-   & [quality=<hi|lo>]
-   & lang=<ru-RU|en-US|uk-UK|tr-TR>
-   & speaker=<jane|oksana|alyss|omazh|zahar|ermil>
-   & [speed=<скорость речи>]
-   & [emotion=<good|neutral|evil>]
-//*/
-
 class YandexUrlBuilder final : public UrlBuilder {
  public:
-  YandexUrlBuilder(std::string const& apiKey, Escaper& escaper)
-      : UrlBuilder(apiKey, escaper) {}
+  YandexUrlBuilder(std::string const& apiKey, Escaper& escaper);
+
   YandexUrlBuilder(YandexUrlBuilder const&) = delete;
   YandexUrlBuilder& operator=(YandexUrlBuilder const&) = delete;
 
-  std::string Make(std::string const& text) const {
-    std::stringstream s;
-    s << "https://tts.voicetech.yandex.net/generate?"
-      << "key=" << token << "&text=" << escaper.Escape(text) << "&format=opus"
-      << "&quality=hi"
-      << "&lang=ru-RU"
-      << "&speaker=jane"
-      << "&speed=1.0"
-      << "&emotion=good";
+  enum Format { mp3, wav, opus };
 
-    return s.str();
-  }
+  enum Quality { high, low };
+
+  enum Language { ru, en, uk, tr };
+
+  enum Speaker { Jane, Oksana, Alyss, Omazh, Zahar, Ermil };
+
+  enum Emotion { good, neutral, evil };
+
+  std::string Make(std::string const& text,
+                   Speaker speaker = Speaker::Jane,
+                   Emotion emotion = Emotion::good) const;
+
+ private:
+  static const std::map<Format, std::string> formats;
+  static const std::map<Quality, std::string> qualities;
+  static const std::map<Language, std::string> languages;
+  static const std::map<Speaker, std::string> speakers;
+  static const std::map<Emotion, std::string> emotions;
+
+  Format format;
+  Quality quality;
+  Language language;
+  float speed;
 };
