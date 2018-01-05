@@ -1,9 +1,21 @@
 #include "Basebot.h"
+#include "StopFlag.h"
 
 #include <iostream>
 
 Basebot::Basebot(std::string const& telegramToken, Httper& http, Escaper& esc)
     : offset(0), http(http), esc(esc), tUrl(telegramToken, esc) {}
+
+void Basebot::Run(StopFlag& stopFlag) {
+  while (!stopFlag.IsStop()) {
+    try {
+      ProcessUpdates();
+    } catch (...) {
+      std::cout << "Unknown exception" << std::endl;
+      break;
+    }
+  }
+}
 
 void Basebot::GetInfo(size_t ownId, std::string& name) {
   Httper::ContainerType data = http.Get(tUrl.GetMe());

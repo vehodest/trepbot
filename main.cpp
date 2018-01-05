@@ -27,13 +27,7 @@ int main() {
 
   CurlEngine curlEng(stopFlag);
   Trepbot bot(TELEGRAM_TOKEN, YANDEX_TOKEN, curlEng, curlEng);
-
-  while (!stopFlag.IsStop()) {
-    try {
-      bot.ProcessUpdates();
-    } catch (...) {
-    }
-  }
+  bot.Run(stopFlag);
 
   std::cout << "That's all!" << std::endl;
   return 0;

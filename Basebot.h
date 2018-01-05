@@ -8,6 +8,8 @@
 
 #include <map>
 
+class StopFlag;
+
 class Basebot {
  public:
   Basebot(std::string const& telegramToken, Httper& http, Escaper& esc);
@@ -15,7 +17,7 @@ class Basebot {
   Basebot(Basebot const&) = delete;
   Basebot& operator=(Basebot const&) = delete;
 
-  void ProcessUpdates();
+  void Run(StopFlag& stopFlag);
   void GetInfo(size_t ownId, std::string& name);
 
  protected:
@@ -29,5 +31,7 @@ class Basebot {
   TelegramUrlBuilder tUrl;
 
  private:
+  void ProcessUpdates();
+
   size_t offset;
 };
