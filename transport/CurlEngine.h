@@ -17,16 +17,27 @@ class CurlEngine final : public Httper, public Escaper {
   CurlEngine& operator=(CurlEngine const&) = delete;
 
   std::string Escape(std::string const& str) override;
+
   void SetTimeout(size_t msec) override;
-  ContainerType Get(std::string const& url) override;
-  ContainerType Post(std::string const& url,
-                     std::string const& partname,
-                     std::string const& filename,
-                     ContainerType const& data) override;
-  httpCode Put(std::string const& url, ContainerType const& data) override;
-  httpCode Delete(std::string const& url) override;
-  std::string Redirect(std::string const& url) override;
+
+  httpCode Get(std::string const& url, ContainerType& answer) override;
+
+  httpCode Post(std::string const& url,
+                std::string const& partname,
+                std::string const& filename,
+                ContainerType const& data,
+                ContainerType answer = ContainerType()) override;
+
+  httpCode Put(std::string const& url,
+               ContainerType const& data,
+               ContainerType& answer) override;
+
+  httpCode Delete(std::string const& url, ContainerType& answer) override;
+
+  std::string Redirect(std::string const& url, ContainerType& answer) override;
+
   void AddHeader(std::string const& header) override;
+
   void ClearHeaders() override;
 
  private:

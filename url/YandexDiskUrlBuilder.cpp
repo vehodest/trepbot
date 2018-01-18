@@ -21,3 +21,16 @@ std::string YandexDiskUrlBuilder::Delete(std::string const& path,
   return baseUrl + "resources?path=" + escaper.Escape(path) +
          "&permanently=" + (permanently ? "true" : "false");
 }
+
+std::string YandexDiskUrlBuilder::Publish(std::string const& path) {
+  return baseUrl + "resources/publish?path=" + escaper.Escape(path);
+}
+
+std::string YandexDiskUrlBuilder::Unpublish(std::string const& path) {
+  return baseUrl + "resources/unpublish?path=" + escaper.Escape(path);
+}
+
+std::string YandexDiskUrlBuilder::Download(std::string const& publicKey) {
+  return baseUrl +
+         "public/resources/download?public_key=" + escaper.Escape(publicKey);
+}

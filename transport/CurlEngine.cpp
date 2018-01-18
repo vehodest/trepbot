@@ -176,6 +176,8 @@ size_t CurlEngine::HeaderCallback(char* buffer,
 }
 
 void CurlEngine::PrepareRequest(std::string const& url, ContainerType& data) {
+  data.clear();
+
   ::curl_easy_reset(handle.get());
 
   ::curl_easy_setopt(handle.get(), CURLOPT_URL, url.c_str());
@@ -207,22 +209,20 @@ void CurlEngine::SetTimeout(size_t msec) {
   timeoutMsec = msec;
 }
 
-CurlEngine::ContainerType CurlEngine::Get(std::string const& url) {
-  ContainerType data;
-  PrepareRequest(url, data);
+CurlEngine::httpCode CurlEngine::Get(std::string const& url,
+                                     ContainerType& answer) {
+  PrepareRequest(url, answer);
 
-  Perform("GET request");
-
-  return data;
+  return Perform("GET request");
+  ;
 }
 
-CurlEngine::ContainerType CurlEngine::Post(
-    std::string const& url,
-    std::string const& partname,
-    std::string const& filename,
-    CurlEngine::ContainerType const& data) {
-  ContainerType result;
-  PrepareRequest(url, result);
+CurlEngine::httpCode CurlEngine::Post(std::string const& url,
+                                      std::string const& partname,
+                                      std::string const& filename,
+                                      ContainerType const& data,
+                                      ContainerType answer) {
+  PrepareRequest(url, answer);
 
   struct curl_httppost* post = NULL;
   struct curl_httppost* last = NULL;
@@ -238,14 +238,13 @@ CurlEngine::ContainerType CurlEngine::Post(
 
   ::curl_easy_setopt(handle.get(), CURLOPT_HTTPPOST, post_handle.get());
 
-  Perform("POST request");
-
-  return result;
+  return Perform("POST request");
+  ;
 }
 
 CurlEngine::httpCode CurlEngine::Put(std::string const& url,
-                                     ContainerType const& data) {
-  ContainerType answer;
+                                     ContainerType const& data,
+                                     ContainerType& answer) {
   PrepareRequest(url, answer);
 
   CallbackContext context(data);
@@ -256,10 +255,11 @@ CurlEngine::httpCode CurlEngine::Put(std::string const& url,
                      static_cast<curl_off_t>(data.size()));
 
   return Perform("PUT request");
+  ;
 }
 
-CurlEngine::httpCode CurlEngine::Delete(std::string const& url) {
-  ContainerType answer;
+CurlEngine::httpCode CurlEngine::Delete(std::string const& url,
+                                        ContainerType& answer) {
   PrepareRequest(url, answer);
 
   ::curl_easy_setopt(handle.get(), CURLOPT_CUSTOMREQUEST, "DELETE");
@@ -267,11 +267,12 @@ CurlEngine::httpCode CurlEngine::Delete(std::string const& url) {
   return Perform("DELETE request");
 }
 
-std::string CurlEngine::Redirect(std::string const& url) {
+std::string CurlEngine::Redirect(std::string const& url,
+                                 ContainerType& answer) {
   static const std::string Location("Location");
 
   ResponseHeadersHelper helper(responseHeaders, {Location});
-  Get(url);
+  Get(url, answer);
   if (!responseHeaders.IsPresent(Location)) {
     throw std::runtime_error("Error result of redirection GET request");
   }

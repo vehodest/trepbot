@@ -18,7 +18,9 @@ void Basebot::Run(StopFlag& stopFlag) {
 }
 
 void Basebot::GetInfo(size_t ownId, std::string& name) {
-  Httper::ContainerType data = http.Get(tUrl.GetMe());
+  Httper::ContainerType data;
+
+  http.Get(tUrl.GetMe(), data);
 
   data.push_back(char(0));
   nlohmann::json answer = nlohmann::json::parse(data.data());
@@ -31,7 +33,9 @@ void Basebot::ProcessUpdates() {
   // Получаем данные из Телеграма
   http.SetTimeout(60500);
   std::cout << tUrl.GetUpdates(60, offset) << std::endl;
-  Httper::ContainerType data = http.Get(tUrl.GetUpdates(60, offset));
+
+  Httper::ContainerType data;
+  http.Get(tUrl.GetUpdates(60, offset), data);
 
   data.push_back(char(0));
   nlohmann::json answer = nlohmann::json::parse(data.data());

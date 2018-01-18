@@ -18,11 +18,11 @@ void Trepbot::MessageHandler(nlohmann::json& msg) {
     return;
   }
 
-  std::string speach = msg["text"].get<std::string>();
+  std::string speech = msg["text"].get<std::string>();
   size_t chatId = msg["chat"]["id"].get<size_t>();
   std::cout << "Message: " << std::endl
             << "chat: " << chatId << std::endl
-            << "text: " << speach << std::endl;
+            << "text: " << speech << std::endl;
 
   bool isNeedAnswer(false), isCommand(false);
   for (auto const& entity : msg["entities"]) {
@@ -33,9 +33,9 @@ void Trepbot::MessageHandler(nlohmann::json& msg) {
       size_t offset = entity["offset"].get<size_t>();
       size_t length = entity["length"].get<size_t>();
 
-      if (botname == speach.substr(offset, length) && offset == 0) {
+      if (botname == speech.substr(offset, length) && offset == 0) {
         isNeedAnswer = true;
-        speach.erase(offset, length);
+        speech.erase(offset, length);
       }
     }
   }
@@ -45,10 +45,12 @@ void Trepbot::MessageHandler(nlohmann::json& msg) {
   }
 
   // Все данные есть, можно сгенерировать звук и отправить его
-  Httper::ContainerType data = std::move(http.Get(yaUrl.Make(speach)));
-  Httper::ContainerType result = std::move(
-      http.Post(tUrl.SendVoice(chatId, false), "voice", "voice", data));
-  // http.Get(tUrl.SendMessage(chatId, speach));
+  Httper::ContainerType data;
+  http.Get(yaUrl.Make(speech), data);
+
+  Httper::ContainerType result;
+  http.Post(tUrl.SendVoice(chatId, false), "voice", "voice", data, result);
+  // http.Get(tUrl.SendMessage(chatId, speech));
 
   result.push_back(0);
   std::cout << "POST result:" << std::endl << result.data() << std::endl;
@@ -58,17 +60,18 @@ void Trepbot::QueryHandler(nlohmann::json& query) {
   // Получение идентификатора запроса
   std::string queryId = query["id"].get<std::string>();
   size_t senderId = query["from"]["id"].get<size_t>();
-  std::string speach = query["query"];
+  std::string speech = query["query"];
 
-  std::cout << speach << std::endl;
+  std::cout << speech << std::endl;
 
   // Преобразование запроса в речь
-  Httper::ContainerType voice = std::move(http.Get(yaUrl.Make(speach)));
+  Httper::ContainerType voice;
+  http.Get(yaUrl.Make(speech), voice);
 
   // Отправка запроса себе же на сервера Telegram
   std::cout << "Self query: " << tUrl.SendVoice(senderId, true) << std::endl;
-  Httper::ContainerType result = std::move(
-      http.Post(tUrl.SendVoice(senderId, true), "voice", "voice", voice));
+  Httper::ContainerType result;
+  http.Post(tUrl.SendVoice(senderId, true), "voice", "voice", voice, result);
   result.push_back(char(0));
 
   nlohmann::json answer = nlohmann::json::parse(result.data());
@@ -84,14 +87,14 @@ void Trepbot::QueryHandler(nlohmann::json& query) {
   cachedVoice["type"] = "voice";
   cachedVoice["id"] = 0;
   cachedVoice["voice_file_id"] = fileId;
-  cachedVoice["title"] = speach;
+  cachedVoice["title"] = speech;
 
   nlohmann::json queryAnswer;
   queryAnswer = nlohmann::json::array();
   queryAnswer.push_back(cachedVoice);
 
-  Httper::ContainerType data =
-      http.Get(tUrl.AnswerInlineQuery(queryId, queryAnswer.dump()));
+  Httper::ContainerType data;
+  http.Get(tUrl.AnswerInlineQuery(queryId, queryAnswer.dump()), data);
   data.push_back(0);
   std::cout << "Answer for inline ID: " << queryId << std::endl
             << queryAnswer.dump() << std::endl
@@ -99,5 +102,5 @@ void Trepbot::QueryHandler(nlohmann::json& query) {
             << data.data() << std::endl;
 
   // Удаление сообщения
-  http.Get(tUrl.DeleteMessage(senderId, messageId));
+  http.Get(tUrl.DeleteMessage(senderId, messageId), data);
 }

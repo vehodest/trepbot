@@ -10,6 +10,9 @@ class YandexDiskUrlBuilder final : public UrlBuilder {
   std::string Info();
   std::string Upload(std::string const& path, bool overwrite);
   std::string Delete(std::string const& path, bool permanently);
+  std::string Publish(std::string const& path);
+  std::string Unpublish(std::string const& path);
+  std::string Download(std::string const& publicKey);
 
  private:
   static std::string const baseUrl;
