@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Escaper.h"
-#include "Httper.h"
 #include "TelegramUrlBuilder.h"
 #include "YandexUrlBuilder.h"
 #include "json.hpp"
@@ -9,6 +7,8 @@
 #include <map>
 
 class StopFlag;
+class Httper;
+class Escaper;
 
 class Basebot {
  public:

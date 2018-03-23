@@ -1,4 +1,6 @@
 #include "Basebot.h"
+#include "Escaper.h"
+#include "Httper.h"
 #include "StopFlag.h"
 
 #include <iostream>
