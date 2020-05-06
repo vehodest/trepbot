@@ -1,7 +1,7 @@
 #pragma once
+#include <stopflag.h>
 
 #include <atomic>
-#include "StopFlag.h"
 
 class SimpleStopFlag final : public StopFlag {
  public:

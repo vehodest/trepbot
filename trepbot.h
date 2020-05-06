@@ -1,7 +1,6 @@
 #pragma once
-
-#include "Basebot.h"
-#include "YandexUrlBuilder.h"
+#include <basebot.h>
+#include <yandexurlbuilder.h>
 
 #include <map>
 

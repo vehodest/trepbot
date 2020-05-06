@@ -1,6 +1,7 @@
-#include "Trepbot.h"
-#include "Escaper.h"
-#include "Httper.h"
+#include <trepbot.h>
+#include <escaper.h>
+#include <httper.h>
+
 #include <iostream>
 
 Trepbot::Trepbot(std::string const& telegramToken,

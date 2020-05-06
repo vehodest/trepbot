@@ -1,8 +1,7 @@
 #pragma once
-
-#include "Escaper.h"
-#include "Httper.h"
-#include "StopFlag.h"
+#include <escaper.h>
+#include <httper.h>
+#include <stopflag.h>
 
 #include <memory>
 #include <vector>

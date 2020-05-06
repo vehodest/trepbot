@@ -1,8 +1,7 @@
 #pragma once
-
-#include "TelegramUrlBuilder.h"
-#include "YandexUrlBuilder.h"
-#include "json.hpp"
+#include <telegramurlbuilder.h>
+#include <yandexurlbuilder.h>
+#include <json.hpp>
 
 #include <map>
 

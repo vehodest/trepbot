@@ -1,4 +1,4 @@
-#include "YandexUrlBuilder.h"
+#include <yandexurlbuilder.h>
 
 /* https://tts.voicetech.yandex.net/generate?
    key=<API‑ключ>

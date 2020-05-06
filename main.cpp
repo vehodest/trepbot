@@ -1,9 +1,9 @@
+#include <curlengine.h>
+#include <simplestopflag.h>
+#include <trepbot.h>
+
 #include <csignal>
 #include <iostream>
-
-#include "CurlEngine.h"
-#include "SimpleStopFlag.h"
-#include "Trepbot.h"
 
 #ifndef YANDEX_TOKEN
 #define YANDEX_TOKEN ""
@@ -14,12 +14,15 @@
 #endif
 
 namespace {
+  
 SimpleStopFlag stopFlag;
 
-void signal_handler(int signum) {
+void signal_handler(int signum)
+{
   stopFlag.Stop();
 }
-}  // namespace
+
+}  // unnamed namespace
 
 int main() {
   std::signal(SIGTERM, signal_handler);

@@ -11,11 +11,11 @@ add_definitions("-DYANDEX_TOKEN=\"${YANDEX}\"")
 
 set(SOURCE
    ${SOURCE}
-   ${CMAKE_CURRENT_SOURCE_DIR}/url/TelegramUrlBuilder.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/url/YandexUrlBuilder.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/transport/CurlEngine.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/Basebot.cpp
-   ${CMAKE_CURRENT_SOURCE_DIR}/Trepbot.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/url/telegramurlbuilder.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/url/yandexurlbuilder.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/transport/curlengine.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/basebot.cpp
+   ${CMAKE_CURRENT_SOURCE_DIR}/trepbot.cpp
    ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
 )
 
@@ -23,7 +23,7 @@ set(SOURCE
 include_directories ("${PROJECT_SOURCE_DIR}")
 include_directories ("${PROJECT_SOURCE_DIR}/transport")
 include_directories ("${PROJECT_SOURCE_DIR}/url")
-include_directories ("${PROJECT_SOURCE_DIR}/3rd/json/src")
+include_directories ("${PROJECT_SOURCE_DIR}/thirdparty")
 
 add_executable(trepbot ${SOURCE})
 

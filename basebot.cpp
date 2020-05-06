@@ -1,12 +1,16 @@
-#include "Basebot.h"
-#include "Escaper.h"
-#include "Httper.h"
-#include "StopFlag.h"
+#include <basebot.h>
+#include <escaper.h>
+#include <httper.h>
+#include <stopflag.h>
 
 #include <iostream>
 
 Basebot::Basebot(std::string const& telegramToken, Httper& http, Escaper& esc)
-    : offset(0), http(http), esc(esc), tUrl(telegramToken, esc) {}
+: http(http)
+, esc(esc)
+, tUrl(telegramToken, esc) 
+, offset(0)
+{}
 
 void Basebot::Run(StopFlag& stopFlag) {
   while (!stopFlag.IsStop()) {
@@ -47,7 +51,7 @@ void Basebot::ProcessUpdates() {
   }
 
   nlohmann::json result = answer["result"];
-  size_t max(0);
+  long int max(0);
   for (auto& update : result) {  // перебор элементов секции Update
     for (auto obj = update.begin(); obj != update.end(); ++obj) {
       if (obj.key() == "update_id") {  // определение максимального элемента

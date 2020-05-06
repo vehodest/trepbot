@@ -1,8 +1,8 @@
 #pragma once
+#include <urlbuilder.h>
 
 #include <sstream>
 #include <string>
-#include "UrlBuilder.h"
 
 class TelegramUrlBuilder final : public UrlBuilder {
  public:

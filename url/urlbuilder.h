@@ -1,7 +1,7 @@
 #pragma once
+#include <escaper.h>
 
 #include <string>
-#include "Escaper.h"
 
 class UrlBuilder {
  public:

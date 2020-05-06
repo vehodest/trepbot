@@ -1,4 +1,5 @@
-#include "CurlEngine.h"
+#include <curlengine.h>
+
 #include <iostream>
 #include <sstream>
 

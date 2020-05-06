@@ -1,4 +1,4 @@
-#include "TelegramUrlBuilder.h"
+#include <telegramurlbuilder.h>
 
 std::string const TelegramUrlBuilder::telegramMainUrl(
     "https://api.telegram.org/bot");

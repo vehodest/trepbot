@@ -7,7 +7,7 @@ enable_testing()
 
 include_directories(${gtest_SOURCE_DIR}/include)
 
-add_executable(trepbot_tests blank-test.cpp)
+add_executable(trepbot_tests blanktest.cpp)
 
 target_link_libraries(trepbot_tests gtest gtest_main)
 target_link_libraries(trepbot_tests pthread)
